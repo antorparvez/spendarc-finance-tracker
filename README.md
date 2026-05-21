@@ -6,6 +6,25 @@ Flutter starter with **clean architecture**, **multi-flavor** builds, and a **Sp
 
 **Dart SDK:** `^3.10.1`
 
+## Screenshots
+
+<p align="center">
+  <img src="assets/screenshots/home_dashboard.png" width="360" alt="SpendArc dashboard" />
+</p>
+<p align="center"><em>Dashboard — balance, arc meter, weekly chart, transactions</em></p>
+
+<p align="center">
+  <img src="assets/screenshots/add_expance.png" width="280" alt="Add expense" />
+  &nbsp;&nbsp;
+  <img src="assets/screenshots/add_income.png" width="280" alt="Add income" />
+</p>
+<p align="center"><em>Add transaction — expense and income</em></p>
+
+<p align="center">
+  <img src="assets/screenshots/delete.png" width="360" alt="Swipe to delete" />
+</p>
+<p align="center"><em>Swipe to delete transaction</em></p>
+
 ---
 
 ## Quick start
