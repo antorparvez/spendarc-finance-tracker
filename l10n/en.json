@@ -1,5 +1,5 @@
 {
-  "app.title": "BLoC Boilerplate",
+  "app.title": "SpendArc",
   "app.home": "Home",
   "app.menu": "Menu",
   "app.orders": "Orders",
@@ -21,5 +21,22 @@
   "app.environment": "Environment",
   "app.base_url": "Base URL",
   "app.sample_api": "Dummy API Sample",
-  "app.failed_load_sample": "Failed to load sample"
+  "app.failed_load_sample": "Failed to load sample",
+  "finance.title": "Finance Tracker",
+  "finance.balance": "Balance",
+  "finance.income": "Income",
+  "finance.expense": "Expense",
+  "finance.spending": "Spending",
+  "finance.weekly_trend": "Weekly trend",
+  "finance.transactions": "Transactions",
+  "finance.add": "Add transaction",
+  "finance.save": "Save",
+  "finance.title_hint": "Title",
+  "finance.amount_hint": "Amount",
+  "finance.income_type": "Income",
+  "finance.expense_type": "Expense",
+  "finance.empty": "No transactions yet",
+  "finance.syncing": "Syncing...",
+  "finance.rollback": "Could not save. Changes reverted.",
+  "finance.delete": "Delete"
 }

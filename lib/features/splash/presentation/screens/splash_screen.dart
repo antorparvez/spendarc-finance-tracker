@@ -41,6 +41,7 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final gradient = isDark ? AppColors.gradientDark : AppColors.gradientLight;
+    final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: Container(
@@ -57,6 +58,12 @@ class _SplashScreenState extends State<SplashScreen>
             child: Column(
               children: [
                 const Spacer(),
+                Icon(
+                  Icons.account_balance_wallet_outlined,
+                  size: 56,
+                  color: scheme.primary,
+                ),
+                const SizedBox(height: 16),
                 Text(
                   FlavorConfig.config.appName,
                   textAlign: TextAlign.center,
@@ -66,8 +73,8 @@ class _SplashScreenState extends State<SplashScreen>
                 Text(
                   'app.loading'.tr(),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
+                        color: scheme.onSurfaceVariant,
+                      ),
                 ),
                 const Spacer(),
                 AnimatedBuilder(
@@ -78,14 +85,13 @@ class _SplashScreenState extends State<SplashScreen>
                         ClipRRect(
                           borderRadius: BorderRadius.circular(999),
                           child: LinearProgressIndicator(
-                            minHeight: 8,
+                            minHeight: 6,
                             value: _controller.value,
-                            backgroundColor: Colors.white.withValues(
-                              alpha: 0.16,
+                            backgroundColor:
+                                scheme.surfaceContainerHighest.withValues(
+                              alpha: 0.5,
                             ),
-                            valueColor: const AlwaysStoppedAnimation(
-                              AppColors.secondary,
-                            ),
+                            valueColor: AlwaysStoppedAnimation(scheme.primary),
                           ),
                         ),
                         const SizedBox(height: 8),

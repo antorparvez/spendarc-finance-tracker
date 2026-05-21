@@ -15,6 +15,7 @@ import '../core/storage/migration/storage_migrations_registry.dart';
 import '../core/system/system_ui_config.dart';
 import '../core/theme/theme_cubit.dart';
 import '../shared/di/app_dependencies.dart';
+import '../shared/di/service_locator.dart';
 import 'app.dart';
 import 'app_scope.dart';
 
@@ -60,6 +61,7 @@ Future<void> bootstrap(Environment environment) async {
     localStorage: localStorage,
     secureStorage: secureStorage,
   );
+  setupServiceLocator(dependencies);
 
   if (AppLog.isEnabled) {
     AppLog.core(

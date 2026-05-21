@@ -11,4 +11,10 @@ class ApiConstants {
 
   static const sampleProductDetail = '$dummyJsonBase/products/1';
 
+  // --- Finance tracker (relative to flavor base URL) ---
+
+  static const financeTransactions = '/finance/transactions';
+  static String financeTransactionById(String id) =>
+      '$financeTransactions/$id';
+
 }

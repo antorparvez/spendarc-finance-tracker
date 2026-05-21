@@ -9,8 +9,12 @@ import 'package:riverpod_boilerplate/config/flavor_config.dart';
 import 'package:riverpod_boilerplate/core/localization/supported_locales.dart';
 import 'package:riverpod_boilerplate/core/storage/local_storage_service.dart';
 import 'package:riverpod_boilerplate/core/storage/secure_storage_service.dart';
+import 'package:riverpod_boilerplate/features/finance_tracker/finance_tracker_di.dart';
+import 'package:riverpod_boilerplate/features/finance_tracker/presentation/bloc/finance/finance_event.dart';
+import 'package:riverpod_boilerplate/features/finance_tracker/presentation/bloc/finance/finance_bloc.dart';
 import 'package:riverpod_boilerplate/features/home/presentation/screens/home_screen.dart';
 import 'package:riverpod_boilerplate/shared/di/app_dependencies.dart';
+import 'package:riverpod_boilerplate/shared/di/service_locator.dart';
 
 void main() {
   setUpAll(() async {
@@ -19,7 +23,11 @@ void main() {
     await EasyLocalization.ensureInitialized();
   });
 
-  testWidgets('shows flavor configuration', (WidgetTester tester) async {
+  setUp(() async {
+    await disposeServiceLocator();
+  });
+
+  testWidgets('home shows finance balance', (WidgetTester tester) async {
     FlavorConfig.initialize(Environment.dev);
 
     final localStorage = await LocalStorageService.create();
@@ -27,6 +35,7 @@ void main() {
       localStorage: localStorage,
       secureStorage: SecureStorageService(),
     );
+    setupServiceLocator(dependencies);
 
     await tester.pumpWidget(
       EasyLocalization(
@@ -34,15 +43,20 @@ void main() {
         path: 'l10n',
         fallbackLocale: SupportedLocales.fallback,
         startLocale: SupportedLocales.fallback,
-        child: AppScope.wrapForTest(
+        child: AppScope.wrap(
           dependencies: dependencies,
-          child: const MaterialApp(home: HomeScreen(enableAutoLoad: false)),
+          child: const MaterialApp(home: HomeScreen()),
         ),
       ),
     );
-    await tester.pumpAndSettle();
 
-    expect(find.text('BLoC Boilerplate Dev'), findsOneWidget);
-    expect(find.text('Home'), findsOneWidget);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 800));
+
+    expect(
+      find.textContaining('\$'),
+      findsWidgets,
+      reason: 'Seeded finance dashboard should show currency',
+    );
   });
 }
