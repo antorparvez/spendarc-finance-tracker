@@ -21,5 +21,22 @@
   "app.environment": "পরিবেশ",
   "app.base_url": "বেস URL",
   "app.sample_api": "ডামি API নমুনা",
-  "app.failed_load_sample": "নমুনা লোড করতে ব্যর্থ"
+  "app.failed_load_sample": "নমুনা লোড করতে ব্যর্থ",
+  "finance.title": "ফাইন্যান্স ট্র্যাকার",
+  "finance.balance": "ব্যালেন্স",
+  "finance.income": "আয়",
+  "finance.expense": "খরচ",
+  "finance.spending": "খরচের অগ্রগতি",
+  "finance.weekly_trend": "সাপ্তাহিক প্রবণতা",
+  "finance.transactions": "লেনদেন",
+  "finance.add": "লেনদেন যোগ করুন",
+  "finance.save": "সংরক্ষণ",
+  "finance.title_hint": "শিরোনাম",
+  "finance.amount_hint": "পরিমাণ",
+  "finance.income_type": "আয়",
+  "finance.expense_type": "খরচ",
+  "finance.empty": "এখনো কোনো লেনদেন নেই",
+  "finance.syncing": "সিঙ্ক হচ্ছে...",
+  "finance.rollback": "সংরক্ষণ ব্যর্থ। পরিবর্তন ফিরিয়ে নেওয়া হয়েছে।",
+  "finance.delete": "মুছুন"
 }

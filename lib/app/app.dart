@@ -1,3 +1,5 @@
+import 'dart:async' show unawaited;
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +11,7 @@ import '../core/routing/app_router.dart';
 import '../core/system/system_ui_config.dart';
 import '../core/theme/app_theme.dart';
 import '../core/theme/theme_cubit.dart';
+import '../shared/di/service_locator.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -29,6 +32,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    unawaited(disposeServiceLocator());
     super.dispose();
   }
 

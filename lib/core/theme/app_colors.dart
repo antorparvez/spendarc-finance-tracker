@@ -1,32 +1,59 @@
 import 'package:flutter/material.dart';
 
+/// SpendArc finance palette (light + dark).
 class AppColors {
   AppColors._();
 
-  // Gamified warm palette inspired by your screenshots.
-  static const primary = Color(0xFFB30F1B);
-  static const secondary = Color(0xFFF4B400);
-  static const accent = Color(0xFFE2571A);
+  static const primary = Color(0xFF4F46E5);
+  static const primaryDark = Color(0xFF818CF8);
+  static const secondary = Color(0xFF10B981);
+  static const accent = Color(0xFF06B6D4);
 
-  static const lightBackground = Color(0xFFFDF2F2);
-  static const darkBackground = Color(0xFF4A070C);
-  static const surface = Color(0xFF7C0C12);
-  static const surfaceDark = Color(0xFF640A10);
+  static const lightBackground = Color(0xFFF4F6FB);
+  static const lightSurface = Color(0xFFFFFFFF);
+  static const lightSurfaceVariant = Color(0xFFE8ECF4);
+  static const onSurfaceLight = Color(0xFF0F172A);
+  static const onSurfaceVariantLight = Color(0xFF64748B);
 
-  static const error = Color(0xFFFF6B6B);
-  static const textPrimaryLight = Color(0xFFF6E9CA);
-  static const textPrimaryDark = Color(0xFFFCF2DE);
-  static const textSecondary = Color(0xFFE3D2B0);
+  static const darkBackground = Color(0xFF0B1020);
+  static const darkSurface = Color(0xFF151D33);
+  static const darkSurfaceVariant = Color(0xFF243049);
+  static const onSurfaceDark = Color(0xFFF1F5F9);
+  static const onSurfaceVariantDark = Color(0xFF94A3B8);
+
+  static const error = Color(0xFFEF4444);
+  static const success = Color(0xFF10B981);
+  static const warning = Color(0xFFF59E0B);
 
   static const gradientLight = <Color>[
-    Color(0xFFB30F1B),
-    Color(0xFFA10D17),
-    Color(0xFF8F0A14),
+    Color(0xFFEEF2FF),
+    Color(0xFFF0FDFA),
+    Color(0xFFF8FAFC),
   ];
 
   static const gradientDark = <Color>[
-    Color(0xFF5D090E),
-    Color(0xFF4A070C),
-    Color(0xFF3A0509),
+    Color(0xFF0B1020),
+    Color(0xFF1E1B4B),
+    Color(0xFF0F172A),
   ];
+
+  static const balanceGradientLight = <Color>[
+    Color(0xFF4F46E5),
+    Color(0xFF6366F1),
+    Color(0xFF0D9488),
+  ];
+
+  static const balanceGradientDark = <Color>[
+    Color(0xFF3730A3),
+    Color(0xFF4F46E5),
+    Color(0xFF047857),
+  ];
+
+  static Color glassSurface(Brightness brightness) => brightness == Brightness.dark
+      ? const Color(0xFF1E293B).withValues(alpha: 0.72)
+      : Colors.white.withValues(alpha: 0.82);
+
+  static Color glassBorder(Brightness brightness) => brightness == Brightness.dark
+      ? Colors.white.withValues(alpha: 0.08)
+      : Colors.white.withValues(alpha: 0.9);
 }

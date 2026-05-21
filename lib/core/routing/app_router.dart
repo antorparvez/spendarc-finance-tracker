@@ -16,4 +16,13 @@ final appRouter = GoRouter(
       builder: (context, state) => const HomeScreen(),
     ),
   ],
+  redirect: (context, state) {
+    final path = state.uri.path;
+    if (path == RouteConstants.finance ||
+        path == RouteConstants.financeAdd ||
+        path == RouteConstants.settings) {
+      return RouteConstants.home;
+    }
+    return null;
+  },
 );
