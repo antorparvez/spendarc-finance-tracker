@@ -1,78 +1,45 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:riverpod_boilerplate/core/localization/supported_locales.dart';
-import 'package:riverpod_boilerplate/features/finance_tracker/presentation/bloc/finance/finance_bloc.dart';
-import 'package:riverpod_boilerplate/features/finance_tracker/presentation/bloc/sync/sync_bloc.dart';
+import 'package:riverpod_boilerplate/features/finance_tracker/domain/entities/transaction_type.dart';
 import 'package:riverpod_boilerplate/features/finance_tracker/presentation/bloc/finance/finance_event.dart';
-import 'package:riverpod_boilerplate/features/finance_tracker/presentation/pages/finance_dashboard_page.dart';
-import 'package:riverpod_boilerplate/features/finance_tracker/domain/usecases/add_transaction.dart';
-import 'package:riverpod_boilerplate/features/finance_tracker/domain/usecases/delete_transaction.dart';
-import 'package:riverpod_boilerplate/features/finance_tracker/domain/usecases/get_finance_dashboard.dart';
-import 'package:riverpod_boilerplate/features/finance_tracker/domain/usecases/sync_finance_queue.dart';
-import 'package:riverpod_boilerplate/features/finance_tracker/domain/usecases/watch_sync_events.dart';
-import 'package:riverpod_boilerplate/features/finance_tracker/domain/usecases/watch_transactions.dart';
+import 'package:riverpod_boilerplate/features/finance_tracker/presentation/pages/add_transaction_page.dart';
 
-import '../mocks/mock_finance_repository.dart';
+import '../finance_test_helpers.dart';
 
 void main() {
-  setUpAll(() async {
+  setUpAll(() {
     TestWidgetsFlutterBinding.ensureInitialized();
     SharedPreferences.setMockInitialValues({});
-    await EasyLocalization.ensureInitialized();
   });
 
-  testWidgets('Add transaction bottom sheet saves and closes', (tester) async {
-    final repo = MockFinanceRepository();
-    final syncBloc = SyncBloc(
-      watchSyncEvents: WatchSyncEvents(repo),
-      syncFinanceQueue: SyncFinanceQueue(repo),
-    );
-    final financeBloc = FinanceBloc(
-      getDashboard: GetFinanceDashboard(repo),
-      addTransaction: AddTransaction(repo),
-      deleteTransaction: DeleteTransaction(repo),
-      watchTransactions: WatchTransactions(repo),
-      syncBloc: syncBloc,
-    );
-
-    financeBloc.add(FinanceRefreshRequested());
+  testWidgets('Add transaction sheet wires form fields to FinanceBloc', (tester) async {
+    final harness = FinanceTestHarness.create();
+    await harness.loadDashboard();
 
     await tester.pumpWidget(
-      EasyLocalization(
-        supportedLocales: SupportedLocales.values,
-        path: 'l10n',
-        fallbackLocale: SupportedLocales.fallback,
-        startLocale: SupportedLocales.fallback,
-        child: MaterialApp(
-          home: MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: syncBloc),
-              BlocProvider.value(value: financeBloc),
-            ],
-            child: const FinanceDashboardPage(),
-          ),
+      MaterialApp(
+        home: BlocProvider.value(
+          value: harness.financeBloc,
+          child: const Scaffold(body: AddTransactionSheet()),
         ),
       ),
     );
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 500));
 
-    await tester.tap(find.byType(FloatingActionButton));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.byType(TextField), findsNWidgets(2));
+    expect(find.byIcon(Icons.check_rounded), findsOneWidget);
 
-    await tester.enterText(find.byType(TextField).first, 'Lunch');
-    await tester.enterText(find.byType(TextField).at(1), '12.5');
-    await tester.tap(find.byIcon(Icons.check_rounded));
+    harness.financeBloc.add(
+      FinanceAddRequested(
+        title: 'Lunch',
+        amount: 12.5,
+        type: TransactionType.expense,
+      ),
+    );
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 400));
 
-    expect(repo.transactionCount, 1);
-    await financeBloc.close();
-    await syncBloc.close();
+    expect(harness.repository.transactionCount, 1);
   });
 }

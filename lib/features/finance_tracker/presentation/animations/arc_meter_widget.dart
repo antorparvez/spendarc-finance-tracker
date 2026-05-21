@@ -31,14 +31,28 @@ class _ArcMeterWidgetState extends State<ArcMeterWidget>
       duration: const Duration(milliseconds: 900),
     );
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic);
-    _controller.forward(from: 0);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _runProgressAnimation();
   }
 
   @override
   void didUpdateWidget(covariant ArcMeterWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.progress != widget.progress) {
+      _runProgressAnimation();
+    }
+  }
+
+  void _runProgressAnimation() {
+    final animationsEnabled = TickerMode.of(context) ?? true;
+    if (animationsEnabled) {
       _controller.forward(from: 0);
+    } else {
+      _controller.value = 1.0;
     }
   }
 

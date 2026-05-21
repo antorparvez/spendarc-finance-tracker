@@ -19,9 +19,16 @@ import '../widgets/transaction_list_tile.dart';
 import 'add_transaction_page.dart';
 
 class FinanceDashboardPage extends StatefulWidget {
-  const FinanceDashboardPage({super.key, this.embedded = false});
+  const FinanceDashboardPage({
+    super.key,
+    this.embedded = false,
+    this.autoStart = true,
+  });
 
   final bool embedded;
+
+  /// When false, tests can drive [FinanceBloc] without [FinanceStarted] side effects.
+  final bool autoStart;
 
   @override
   State<FinanceDashboardPage> createState() => _FinanceDashboardPageState();
@@ -33,6 +40,7 @@ class _FinanceDashboardPageState extends State<FinanceDashboardPage> {
   @override
   void initState() {
     super.initState();
+    if (!widget.autoStart) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       context.read<FinanceBloc>().add(FinanceStarted());

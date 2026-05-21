@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Swipe left to reveal delete action; red background only appears while dragging.
 class SwipeDeleteTransaction extends StatefulWidget {
   const SwipeDeleteTransaction({
     super.key,
@@ -16,140 +17,111 @@ class SwipeDeleteTransaction extends StatefulWidget {
 
 class _SwipeDeleteTransactionState extends State<SwipeDeleteTransaction>
     with SingleTickerProviderStateMixin {
-  static const _borderRadius = BorderRadius.all(Radius.circular(20));
-  static const _dragSlop = 12.0;
+  late final AnimationController _snapController;
+  Animation<double>? _snapAnimation;
+  double _dragOffset = 0;
 
-  late final AnimationController _spring;
-  double _offset = 0;
-  Offset? _pointerStart;
-  bool _horizontalDrag = false;
+  static const _deleteRatio = 0.32;
+  static const _confirmRatio = 0.42;
 
   @override
   void initState() {
     super.initState();
-    _spring = AnimationController(
+    _snapController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 450),
+      duration: const Duration(milliseconds: 400),
     );
   }
 
   @override
   void dispose() {
-    _spring.dispose();
+    _snapController.dispose();
     super.dispose();
   }
 
-  Future<void> _animateTo(double target) async {
-    final begin = _offset;
-    final animation = Tween<double>(begin: begin, end: target).animate(
-      CurvedAnimation(parent: _spring, curve: Curves.elasticOut),
+  Future<void> _snapTo(double target) async {
+    final begin = _dragOffset;
+    _snapAnimation = Tween<double>(begin: begin, end: target).animate(
+      CurvedAnimation(parent: _snapController, curve: Curves.elasticOut),
     );
-    void tick() => setState(() => _offset = animation.value);
-    animation.addListener(tick);
-    _spring.value = 0;
-    await _spring.forward(from: 0);
-    animation.removeListener(tick);
-    if (!mounted) return;
-    setState(() => _offset = target);
-    _spring.reset();
-  }
 
-  Future<void> _onDragEnd(double deleteWidth) async {
-    if (_offset < -deleteWidth * 0.45) {
-      await _animateTo(-deleteWidth);
-      widget.onDelete();
-      if (mounted) setState(() => _offset = 0);
-    } else {
-      await _animateTo(0);
-    }
-  }
-
-  void _onPointerDown(PointerDownEvent event) {
-    _spring.stop();
-    _pointerStart = event.position;
-    _horizontalDrag = false;
-  }
-
-  void _onPointerMove(PointerMoveEvent event, double deleteWidth) {
-    final start = _pointerStart;
-    if (start == null) return;
-
-    if (!_horizontalDrag) {
-      final total = event.position - start;
-      if (total.dx.abs() <= _dragSlop && total.dy.abs() <= _dragSlop) {
-        return;
-      }
-      if (total.dx.abs() > total.dy.abs()) {
-        _horizontalDrag = true;
-      } else {
-        _pointerStart = null;
-        return;
+    void listener() {
+      if (_snapAnimation != null) {
+        setState(() => _dragOffset = _snapAnimation!.value);
       }
     }
 
-    setState(() {
-      _offset = (_offset + event.delta.dx).clamp(-deleteWidth, 0.0);
-    });
-  }
-
-  Future<void> _onPointerUp(PointerUpEvent event, double deleteWidth) async {
-    if (_horizontalDrag) {
-      await _onDragEnd(deleteWidth);
-    }
-    _pointerStart = null;
-    _horizontalDrag = false;
-  }
-
-  void _onPointerCancel(PointerCancelEvent event, double deleteWidth) {
-    if (_horizontalDrag) {
-      _animateTo(0);
-    }
-    _pointerStart = null;
-    _horizontalDrag = false;
+    _snapAnimation!.addListener(listener);
+    _snapController
+      ..stop()
+      ..value = 0;
+    await _snapController.forward();
+    _snapAnimation!.removeListener(listener);
+    setState(() => _dragOffset = target);
   }
 
   @override
   Widget build(BuildContext context) {
-    final deleteWidth = MediaQuery.sizeOf(context).width * 0.35;
-    final offset = _offset.clamp(-deleteWidth, 0.0);
-    final revealWidth = (-offset).clamp(0.0, deleteWidth);
+    final maxReveal = MediaQuery.sizeOf(context).width * _deleteRatio;
+    final reveal = (-_dragOffset).clamp(0.0, maxReveal);
+    final slideX = _dragOffset.clamp(-maxReveal, 0.0);
     final errorColor = Theme.of(context).colorScheme.error;
 
-    return Listener(
-      behavior: HitTestBehavior.opaque,
-      onPointerDown: _onPointerDown,
-      onPointerMove: (event) => _onPointerMove(event, deleteWidth),
-      onPointerUp: (event) => _onPointerUp(event, deleteWidth),
-      onPointerCancel: (event) => _onPointerCancel(event, deleteWidth),
-      child: ClipRRect(
-        borderRadius: _borderRadius,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Stack(
         clipBehavior: Clip.hardEdge,
-        child: Stack(
-          clipBehavior: Clip.hardEdge,
-          children: [
-            if (revealWidth > 0)
-              Positioned(
-                right: 0,
-                top: 0,
-                bottom: 0,
-                width: revealWidth,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: errorColor,
-                    borderRadius: _borderRadius,
+        children: [
+          if (reveal > 1)
+            Positioned(
+              right: 0,
+              top: 0,
+              bottom: 0,
+              width: reveal,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: errorColor,
+                  borderRadius: const BorderRadius.horizontal(
+                    left: Radius.circular(20),
                   ),
-                  child: const Align(
-                    alignment: Alignment.center,
-                    child: Icon(Icons.delete_outline, color: Colors.white),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.delete_outline_rounded,
+                    color: Colors.white,
+                    size: 26,
                   ),
                 ),
               ),
-            Transform.translate(
-              offset: Offset(offset, 0),
+            ),
+          Transform.translate(
+            offset: Offset(slideX, 0),
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onHorizontalDragUpdate: (details) {
+                _snapController.stop();
+                setState(() {
+                  _dragOffset = (_dragOffset + details.delta.dx)
+                      .clamp(-maxReveal, 0.0);
+                });
+              },
+              onHorizontalDragEnd: (details) async {
+                final velocity = details.primaryVelocity ?? 0;
+                final shouldDelete = _dragOffset < -maxReveal * _confirmRatio ||
+                    velocity < -400;
+
+                if (shouldDelete) {
+                  await _snapTo(-maxReveal);
+                  widget.onDelete();
+                  if (mounted) setState(() => _dragOffset = 0);
+                } else {
+                  await _snapTo(0);
+                }
+              },
               child: widget.child,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

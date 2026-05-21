@@ -13,6 +13,9 @@ import '../models/transaction_model.dart';
 class FinanceLocalDataSource {
   FinanceLocalDataSource(this._local);
 
+  static bool get _useSyncJsonDecode =>
+      const bool.fromEnvironment('FLUTTER_TEST');
+
   final LocalStorageService _local;
   final _controller = StreamController<List<TransactionModel>>.broadcast();
 
@@ -28,7 +31,10 @@ class FinanceLocalDataSource {
     if (raw == null || raw.isEmpty) {
       return _seedIfEmpty();
     }
-    final maps = await compute(decodeTransactionJsonList, raw);
+    // Isolates can hang in flutter test on some platforms; decode inline there.
+    final maps = _useSyncJsonDecode
+        ? decodeTransactionJsonList(raw)
+        : await compute(decodeTransactionJsonList, raw);
     return maps
         .map(TransactionModel.fromJson)
         .toList()
