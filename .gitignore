@@ -1,0 +1,108 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ / Android Studio
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code — uncomment to ignore local launch configs
+#.vscode/
+
+# Cursor — uncomment to ignore local editor state (keep .cursor/rules if you commit them)
+#.cursor/
+
+# Flutter / Dart / Pub
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Symbolication / obfuscation (uncomment if used)
+# app.*.symbols
+# app.*.map.json
+
+# Android
+android/gradle-wrapper.jar
+android/.gradle/
+android/captures/
+android/gradlew
+android/gradlew.bat
+android/local.properties
+android/.cxx/
+android/**/GeneratedPluginRegistrant.java
+android/key.properties
+**/*.keystore
+**/*.jks
+
+# Android Studio build output folders
+android/app/debug/
+android/app/profile/
+android/app/release/
+
+# iOS / Xcode
+ios/**/dgph
+ios/**/*.mode1v3
+ios/**/*.mode2v3
+ios/**/*.moved-aside
+ios/**/*.pbxuser
+ios/**/*.perspectivev3
+ios/**/*sync/
+ios/.sconsign.dblite
+ios/.tags*
+ios/**/.vagrant/
+ios/**/DerivedData/
+ios/Icon?
+ios/Pods/
+ios/.symlinks/
+ios/profile
+ios/**/xcuserdata/
+ios/**/.generated/
+ios/Flutter/.last_build_id
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Flutter/ephemeral/
+ios/Flutter/app.flx
+ios/Flutter/app.zip
+ios/Flutter/flutter_assets/
+ios/Flutter/flutter_export_environment.sh
+ios/ServiceDefinitions.json
+ios/Runner/GeneratedPluginRegistrant.*
+
+# iOS — exceptions to Xcode rules above
+!ios/default.mode1v3
+!ios/default.mode2v3
+!ios/default.pbxuser
+!ios/default.perspectivev3
+
+# Secrets & signing (never commit — uncomment as needed)
+# .env
+# .env.*
+# !.env.example
+# **/google-services.json
+# **/GoogleService-Info.plist
+
+# FVM
+.fvm/
+
+# Lock files — commit for reproducible builds (do NOT add `*.lock` here)
+#   pubspec.lock
+#   ios/Podfile.lock
