@@ -1,10 +1,22 @@
-# Riverpod Boilerplate
+# SpendArc
 
-Flutter starter with **clean architecture**, **multi-flavor** builds, and a **SpendArc** finance-tracker demo.
+**Taghyeer Technologies — Senior Flutter Developer (online assessment)**
 
-> Package name is `riverpod_boilerplate` (historical). State is **flutter_bloc** + **get_it** — there is no Riverpod dependency.
+Personal finance tracker delivered as one cohesive Flutter app. The repo also ships a small multi-flavor boilerplate around the demo (`package: riverpod_boilerplate`).
 
-**Dart SDK:** `^3.10.1`
+**Stack:** `flutter_bloc` · `get_it` · `go_router` · `dio` · **Dart** `^3.10.1`
+
+### Assessment coverage
+
+| Module | Weight | Implemented in |
+|--------|--------|----------------|
+| Clean architecture — layers, `get_it`, `Either<Failure,T>`, use cases | 20% | `features/finance_tracker/domain`, `*_di.dart`, `service_locator.dart` |
+| Custom animations — arc meter, line chart, spring swipe delete, particle burst | 35% | `presentation/animations/` |
+| BLoC — optimistic updates, rollback, `SyncBloc` ↔ `FinanceBloc`, disposal | 20% | `finance_bloc.dart`, `sync_bloc.dart` |
+| Offline-first — local load, write queue, background sync, JSON isolate | 15% | `finance_local_datasource.dart`, `finance_write_queue.dart`, `finance_sync_service.dart` |
+| Testing — 5+ unit, 2 widget, all pass | 10% | `test/features/finance_tracker/`, `flutter test` |
+
+**Bonus (optional):** adaptive layout · GLSL shaders · GoRouter deep links — not included.
 
 ## Screenshots
 
@@ -194,8 +206,3 @@ After dependency changes: commit `pubspec.lock`; on iOS run `cd ios && pod insta
 - Auth screens (secure storage + session clear on 401 only)
 - Deep links for `/finance/add` (redirects to home; sheets used instead)
 
----
-
-## Tech stack
-
-`flutter_bloc` · `get_it` · `go_router` · `dio` · `easy_localization` · `shared_preferences` · `flutter_secure_storage` · `connectivity_plus`
